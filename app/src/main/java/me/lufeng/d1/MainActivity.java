@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements IWXRenderListener
          */
         String pageName = "WXSample";
 //        String bundleUrl = "http://dotwe.org/raw/dist/c7ad5ca212068ac6642ed9c711282a51.bundle.wx";
-        String bundleUrl = "http://30.8.68.44:9999/js/index.bundle.js";
+        String bundleUrl = "http://192.168.199.201:9999/js/index.bundle.js";
         mWXSDKInstance.renderByUrl(pageName, bundleUrl, null, null,WXRenderStrategy.APPEND_ASYNC);
         Log.v("WXSample", "on create");
     }
@@ -32,12 +32,6 @@ public class MainActivity extends AppCompatActivity implements IWXRenderListener
     public void onViewCreated(WXSDKInstance instance, View view) {
         setContentView(view);
         Log.v("WXSample", "on view created");
-        Context context = getApplicationContext();
-        CharSequence text = "onViewCreated";
-        int duration = Toast.LENGTH_SHORT;
-
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
     }
     @Override
     public void onRenderSuccess(WXSDKInstance instance, int width, int height) {
