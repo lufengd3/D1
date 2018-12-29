@@ -12,7 +12,6 @@ import java.net.URL;
 
 public class WallPaper  extends WXModule {
 
-    //run ui thread
     @JSMethod(uiThread = false)
     public void update(String url) {
         Toast.makeText(mWXSDKInstance.getContext(),url,Toast.LENGTH_SHORT).show();
