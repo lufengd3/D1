@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity implements IWXRenderListener
          */
         String pageName = "WXSample";
 //        String bundleUrl = "http://dotwe.org/raw/dist/c7ad5ca212068ac6642ed9c711282a51.bundle.wx";
-        String bundleUrl = "http://lfzy.space/js/index.bundle.min.js";
+//        String bundleUrl = "http://lfzy.space/js/index.bundle.min.js";
+        String bundleUrl = "http://30.8.68.159:9999/js/index.bundle.js";
         mWXSDKInstance.renderByUrl(pageName, bundleUrl, null, null,WXRenderStrategy.APPEND_ASYNC);
         Log.v("WXSample", "on create");
     }

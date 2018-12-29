@@ -1,4 +1,4 @@
-package me.lufeng.d1;
+package me.lufeng.module;
 
 import android.app.WallpaperManager;
 import android.widget.Toast;
@@ -9,6 +9,8 @@ import com.taobao.weex.utils.WXLogUtils;
 
 import java.io.InputStream;
 import java.net.URL;
+
+import me.lufeng.d1.WXApplication;
 
 public class WallPaper  extends WXModule {
 

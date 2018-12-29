@@ -16,6 +16,10 @@ import com.taobao.weex.utils.WXLogUtils;
 import java.util.HashSet;
 import java.util.Set;
 
+import me.lufeng.component.AppIcon;
+import me.lufeng.module.PkgMananer;
+import me.lufeng.module.WallPaper;
+
 public class WXApplication extends Application {
     private static Context appContext;
 
@@ -35,11 +39,21 @@ public class WXApplication extends Application {
         WXSDKEngine.initialize(this,config);
 
         this.registerMethod();
+        this.registerComponent();
     }
 
     public void registerMethod() {
         try {
             WXSDKEngine.registerModule("WallPaper", WallPaper.class);
+            WXSDKEngine.registerModule("PackageManager", PkgMananer.class);
+        } catch (WXException e) {
+            WXLogUtils.e("[WXSDKEngine] register:", e);
+        }
+    }
+
+    public void registerComponent() {
+        try {
+            WXSDKEngine.registerComponent("appicon", AppIcon.class);
         } catch (WXException e) {
             WXLogUtils.e("[WXSDKEngine] register:", e);
         }
