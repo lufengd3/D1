@@ -13,22 +13,37 @@ import com.taobao.weex.common.WXRenderStrategy;
 
 public class MainActivity extends AppCompatActivity implements IWXRenderListener {
     WXSDKInstance mWXSDKInstance;
+
+    /**
+     * bundleUrl source http://dotwe.org/vue/38e202c16bdfefbdb88a8754f975454c
+     */
+//        String bundleUrl = "http://dotwe.org/raw/dist/c7ad5ca212068ac6642ed9c711282a51.bundle.wx";
+//        String bundleUrl = "http://lfzy.space/js/index.bundle.min.js";
+    private String bundleUrl = "http://192.168.199.201:9999/js/index.bundle.js?a=b";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.render();
+    }
+
+    private void render() {
         mWXSDKInstance = new WXSDKInstance(this);
         mWXSDKInstance.registerRenderListener(this);
-        /**
-         * bundleUrl source http://dotwe.org/vue/38e202c16bdfefbdb88a8754f975454c
-         */
-        String pageName = "WXSample";
-//        String bundleUrl = "http://dotwe.org/raw/dist/c7ad5ca212068ac6642ed9c711282a51.bundle.wx";
-//        String bundleUrl = "http://lfzy.space/js/index.bundle.min.js";
-        String bundleUrl = "http://30.8.68.159:9999/js/index.bundle.js";
-        mWXSDKInstance.renderByUrl(pageName, bundleUrl, null, null,WXRenderStrategy.APPEND_ASYNC);
-        Log.v("WXSample", "on create");
+        mWXSDKInstance.renderByUrl(this.bundleUrl, this.bundleUrl, null, null,WXRenderStrategy.APPEND_ASYNC);
     }
+
+    public void reload() {
+        if (mWXSDKInstance != null) {
+            mWXSDKInstance.destroy();
+            mWXSDKInstance = null;
+
+            this.render();
+        }
+    }
+
     @Override
     public void onViewCreated(WXSDKInstance instance, View view) {
         setContentView(view);
@@ -40,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements IWXRenderListener
     }
     @Override
     public void onRefreshSuccess(WXSDKInstance instance, int width, int height) {
+        Toast.makeText(mWXSDKInstance.getContext(), "reload success", Toast.LENGTH_LONG).show();
+
+        this.reload();
     }
     @Override
     public void onException(WXSDKInstance instance, String errCode, String msg) {
@@ -48,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements IWXRenderListener
     }
     @Override
     protected void onResume() {
+        overridePendingTransition(0,0);
         super.onResume();
         if(mWXSDKInstance!=null){
             mWXSDKInstance.onActivityResume();

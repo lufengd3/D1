@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import me.lufeng.component.AppIcon;
+import me.lufeng.module.PageLocation;
 import me.lufeng.module.PkgMananer;
 import me.lufeng.module.WallPaper;
 
@@ -46,6 +47,7 @@ public class WXApplication extends Application {
         try {
             WXSDKEngine.registerModule("WallPaper", WallPaper.class);
             WXSDKEngine.registerModule("PackageManager", PkgMananer.class);
+            WXSDKEngine.registerModule("location", PageLocation.class);
         } catch (WXException e) {
             WXLogUtils.e("[WXSDKEngine] register:", e);
         }
