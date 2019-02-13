@@ -1,6 +1,8 @@
 package me.lufeng.component;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
@@ -20,14 +22,21 @@ public class AppIcon extends WXComponent<ImageView> {
     protected ImageView initComponentHostView(@NonNull Context context) {
         ImageView image = new ImageView(context);
 
-
-        WXLogUtils.e("Helloe");
-
         return image;
     }
 
-    @WXComponentProp(name = "tel")
-    public void setTel(String appName) {
-        WXLogUtils.v(appName);
+    @WXComponentProp(name = "name")
+    public void setName(String name) {
+        ImageView image = getHostView();
+
+        PackageManager packageManager = getContext().getPackageManager();
+        try {
+            Drawable appIcon = packageManager.getApplicationIcon(name);
+            image.setImageDrawable(appIcon);
+            image.getLayoutParams().height = 140;
+            image.getLayoutParams().width = 140;
+        } catch (Exception e) {
+            WXLogUtils.e(e.getMessage());
+        }
     }
 }
