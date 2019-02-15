@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.provider.Settings;
 
 import com.taobao.weex.annotation.JSMethod;
@@ -49,6 +50,14 @@ public class PkgMananer extends WXModule {
         startActivity(mWXSDKInstance.getContext(), launchIntent, null);
     }
 
+    @JSMethod(uiThread = false)
+    public void uninstallApp(String packageName) {
+        Uri packageUri = Uri.parse("package:" + packageName);
+        Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
+
+        startActivity(mWXSDKInstance.getContext(), uninstallIntent, null);
+    }
+
     private List getAllApps() {
         PackageManager packageManager = mWXSDKInstance.getContext().getPackageManager();
         List<PackageInfo> apps = packageManager.getInstalledPackages(0);
@@ -57,6 +66,10 @@ public class PkgMananer extends WXModule {
         for (int i=0; i<apps.size(); i++) {
             PackageInfo p = apps.get(i);
             Boolean isUserInstalledApp = (p.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
+
+            //if (p.applicationInfo.packageName.contains("h2folio")) {
+                //WXLogUtils.e("hello " + p.applicationInfo.category);
+            //}
 
             if (isUserInstalledApp) {
                 AppInfo newInfo = new AppInfo();
