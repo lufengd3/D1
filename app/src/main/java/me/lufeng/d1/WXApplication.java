@@ -18,7 +18,8 @@ import java.util.Set;
 
 import me.lufeng.component.AppIcon;
 import me.lufeng.module.PageLocation;
-import me.lufeng.module.PkgMananer;
+import me.lufeng.module.PkgManager;
+import me.lufeng.module.WXVirbator;
 import me.lufeng.module.WallPaper;
 
 public class WXApplication extends Application {
@@ -46,8 +47,9 @@ public class WXApplication extends Application {
     public void registerMethod() {
         try {
             WXSDKEngine.registerModule("WallPaper", WallPaper.class);
-            WXSDKEngine.registerModule("PackageManager", PkgMananer.class);
+            WXSDKEngine.registerModule("PackageManager", PkgManager.class);
             WXSDKEngine.registerModule("location", PageLocation.class);
+            WXSDKEngine.registerModule("vibrator", WXVirbator.class);
         } catch (WXException e) {
             WXLogUtils.e("[WXSDKEngine] register:", e);
         }
