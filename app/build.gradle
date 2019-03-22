@@ -37,4 +37,8 @@ dependencies {
 
     implementation 'com.facebook.fresco:fresco:0.10.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
+
+    implementation 'com.alibaba.android:bindingx-core:1.0.9'
+    implementation 'com.alibaba.android:bindingx_weex_plugin:1.0.9'
+
 }

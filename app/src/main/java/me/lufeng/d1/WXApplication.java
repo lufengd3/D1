@@ -3,6 +3,7 @@ package me.lufeng.d1;
 import android.app.Application;
 import android.content.Context;
 
+import com.alibaba.android.bindingx.plugin.weex.BindingX;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
@@ -42,6 +43,12 @@ public class WXApplication extends Application {
 
         this.registerMethod();
         this.registerComponent();
+
+        try {
+            BindingX.register();
+        } catch (WXException e) {
+            WXLogUtils.e("[WXSDKEngine] register:", e);
+        }
     }
 
     public void registerMethod() {
@@ -50,6 +57,8 @@ public class WXApplication extends Application {
             WXSDKEngine.registerModule("PackageManager", PkgManager.class);
             WXSDKEngine.registerModule("location", PageLocation.class);
             WXSDKEngine.registerModule("vibrator", WXVirbator.class);
+
+
         } catch (WXException e) {
             WXLogUtils.e("[WXSDKEngine] register:", e);
         }

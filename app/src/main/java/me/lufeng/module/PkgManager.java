@@ -43,6 +43,21 @@ public class PkgManager extends WXModule {
     }
 
     @JSMethod(uiThread = false)
+    public List getAppByName(String name) {
+        PackageManager packageManager = mWXSDKInstance.getContext().getPackageManager();
+
+        List<ApplicationInfo> apps = packageManager.getInstalledApplications(0);
+
+        List<AppInfo> res = new ArrayList<AppInfo>();
+        for (int i=0; i<apps.size(); i++) {
+            ApplicationInfo p = apps.get(i);
+            WXLogUtils.e("hello " + p.loadLabel(packageManager).toString() + "   " + p.packageName);
+        }
+
+        return res;
+    }
+
+    @JSMethod(uiThread = false)
     public void runApp(String packageName) {
         PackageManager packageManager = mWXSDKInstance.getContext().getPackageManager();
         Intent launchIntent = packageManager.getLaunchIntentForPackage(packageName);
@@ -69,20 +84,21 @@ public class PkgManager extends WXModule {
     private List getAllApps() {
         PackageManager packageManager = mWXSDKInstance.getContext().getPackageManager();
 
-        List<PackageInfo> apps = packageManager.getInstalledPackages(0);
+        List<ApplicationInfo> apps = packageManager.getInstalledApplications(0);
 
         List<AppInfo> res = new ArrayList<AppInfo>();
         for (int i=0; i<apps.size(); i++) {
-            PackageInfo p = apps.get(i);
-            Boolean isUserInstalledApp = (p.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
+            ApplicationInfo p = apps.get(i);
+            if (packageManager.getLaunchIntentForPackage(p.packageName) != null) {
+//            Boolean isUserInstalledApp = (p.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
 
             //if (p.applicationInfo.packageName.contains("h2folio")) {
             //WXLogUtils.e("hello " + p.applicationInfo.category);
             //}
 
-            if (isUserInstalledApp) {
+//            if (isUserInstalledApp) {
                 AppInfo newInfo = new AppInfo();
-                newInfo.appName = p.applicationInfo.loadLabel(packageManager).toString();
+                newInfo.appName = p.loadLabel(packageManager).toString();
                 newInfo.packageName = p.packageName;
                 newInfo.launchCount = 1;
 

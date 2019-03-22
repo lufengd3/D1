@@ -33,8 +33,8 @@ public class AppIcon extends WXComponent<ImageView> {
         try {
             Drawable appIcon = packageManager.getApplicationIcon(name);
             image.setImageDrawable(appIcon);
-            image.getLayoutParams().height = 140;
-            image.getLayoutParams().width = 140;
+//            image.getLayoutParams().height = 140;
+//            image.getLayoutParams().width = 140;
         } catch (Exception e) {
             WXLogUtils.e(e.getMessage());
         }
