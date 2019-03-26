@@ -16,7 +16,7 @@ public class WallPaper  extends WXModule {
 
     @JSMethod(uiThread = false)
     public void update(String url) {
-        Toast.makeText(mWXSDKInstance.getContext(),url,Toast.LENGTH_SHORT).show();
+//        Toast.makeText(mWXSDKInstance.getContext(),url,Toast.LENGTH_SHORT).show();
 
         /*Bitmap pic = BitmapFactory.decodeResource(getResources(), R.drawable.wp0);
         WallpaperManager manager = WallpaperManager.getInstance(getApplicationContext());

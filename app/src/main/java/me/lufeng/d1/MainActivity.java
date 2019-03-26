@@ -18,8 +18,8 @@ public class MainActivity extends AppCompatActivity implements IWXRenderListener
      * bundleUrl source http://dotwe.org/vue/38e202c16bdfefbdb88a8754f975454c
      */
 //        String bundleUrl = "http://dotwe.org/raw/dist/c7ad5ca212068ac6642ed9c711282a51.bundle.wx";
-//    String bundleUrl = "http://lfzy.space/js/index.bundle.min.js";
-    private String bundleUrl = "http://192.168.199.201:9999/js/index.bundle.js";
+    String bundleUrl = "http://lfzy.space/js/index.bundle.min.js";
+//    private String bundleUrl = "http://192.168.199.201:9999/js/index.bundle.js";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
