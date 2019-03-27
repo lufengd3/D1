@@ -16,25 +16,43 @@ public class WallPaper  extends WXModule {
 
     @JSMethod(uiThread = false)
     public void update(String url) {
-//        Toast.makeText(mWXSDKInstance.getContext(),url,Toast.LENGTH_SHORT).show();
-
-        /*Bitmap pic = BitmapFactory.decodeResource(getResources(), R.drawable.wp0);
-        WallpaperManager manager = WallpaperManager.getInstance(getApplicationContext());
+        final String imgUrl = url;
+        final WallpaperManager manager = WallpaperManager.getInstance(WXApplication.getAppContext());
 
         try {
-            manager.setBitmap(pic);
-            Toast.makeText(this, "Wallpaper changed!", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            Toast.makeText(this, "Error!", Toast.LENGTH_SHORT).show();
-        }*/
-
-        try {
-            InputStream img = (InputStream) new URL(url).getContent();
-            WallpaperManager manager = WallpaperManager.getInstance(WXApplication.getAppContext());
+            InputStream img = (InputStream) new URL(imgUrl).getContent();
             manager.setStream(img);
         } catch (Exception e) {
-            WXLogUtils.e(e.getMessage());
+            WXLogUtils.e("Unkonw error while update wallpaper");
         }
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                try {
+//                    final InputStream img = (InputStream) new URL(imgUrl).getContent();
+//
+//                    if (mWXSDKInstance != null) {
+//                        mWXSDKInstance.runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                try {
+//                                    manager.setStream(img);
+//                                } catch (Exception e) {
+//                                    WXLogUtils.e("Unkonw error while update wallpaper");
+//                                }
+//                            }
+//                        });
+//                    }
+//                } catch (Exception e) {
+//                    WXLogUtils.e(e.getMessage());
+//                }
+//
+//
+//            }
+//        }).start();
+
     }
 
 }
