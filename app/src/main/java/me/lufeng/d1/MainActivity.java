@@ -1,6 +1,8 @@
 package me.lufeng.d1;
 
-import android.content.Context;
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,13 +15,10 @@ import com.taobao.weex.common.WXRenderStrategy;
 
 public class MainActivity extends AppCompatActivity implements IWXRenderListener {
     WXSDKInstance mWXSDKInstance;
+    BroadcastReceiver wxReceiver;
 
-    /**
-     * bundleUrl source http://dotwe.org/vue/38e202c16bdfefbdb88a8754f975454c
-     */
-//        String bundleUrl = "http://dotwe.org/raw/dist/c7ad5ca212068ac6642ed9c711282a51.bundle.wx";
     String bundleUrl = "http://lfzy.space/js/index.bundle.min.js";
-//    private String bundleUrl = "http://30.10.84.21:9999/js/index.bundle.js";
+//    private String bundleUrl = "http://30.10.84.85:9999/js/index.bundle.js";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements IWXRenderListener
         mWXSDKInstance = new WXSDKInstance(this);
         mWXSDKInstance.registerRenderListener(this);
         mWXSDKInstance.renderByUrl(this.bundleUrl, this.bundleUrl, null, null,WXRenderStrategy.APPEND_ASYNC);
+
+        this.listenBroadcast();
     }
 
     public void reload() {
@@ -42,6 +43,16 @@ public class MainActivity extends AppCompatActivity implements IWXRenderListener
 
             this.render();
         }
+    }
+
+    private void listenBroadcast() {
+        IntentFilter broadcastIntentFilter = new IntentFilter();
+        broadcastIntentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        broadcastIntentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        broadcastIntentFilter.addDataScheme("package");
+
+        wxReceiver = new WxReceiver(mWXSDKInstance);
+        this.registerReceiver(wxReceiver, broadcastIntentFilter);
     }
 
     @Override
@@ -89,8 +100,11 @@ public class MainActivity extends AppCompatActivity implements IWXRenderListener
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mWXSDKInstance!=null){
+
+        if (mWXSDKInstance!=null) {
             mWXSDKInstance.onActivityDestroy();
         }
+
+        this.unregisterReceiver(wxReceiver);
     }
 }

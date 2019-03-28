@@ -32,7 +32,7 @@ public class PkgManager extends WXModule {
         List apps;
 
         switch (queryRules) {
-            case "frequency":
+            case "important":
                 apps = this.getFrequentlyApps();
                 break;
             default:
@@ -94,7 +94,6 @@ public class PkgManager extends WXModule {
                 AppInfo newInfo = new AppInfo();
                 newInfo.appName = p.loadLabel(packageManager).toString();
                 newInfo.packageName = p.packageName;
-                newInfo.launchCount = 0;
 
                 res.add(newInfo);
             }
@@ -104,49 +103,55 @@ public class PkgManager extends WXModule {
     }
 
     private List getFrequentlyApps() {
-        List apps = new ArrayList();
         Context appContext = mWXSDKInstance.getContext();
-        AppOpsManager appOps = (AppOpsManager) appContext.getSystemService(Context.APP_OPS_SERVICE);
-        int mode = appOps.checkOpNoThrow("android:get_usage_stats",
-                android.os.Process.myUid(), appContext.getPackageName());
-        boolean granted = mode == AppOpsManager.MODE_ALLOWED;
+        List apps = new ArrayList();
 
-        if (granted) {
-            UsageStatsManager usageManager = (UsageStatsManager) appContext.getSystemService(Context.USAGE_STATS_SERVICE);
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.DATE, -1);
+        boolean granted = PermissionManager.checkUsagePermission(appContext);
+        if (!granted) return apps;
 
-            List<UsageStats> allAppUsageStats = usageManager.queryUsageStats(usageManager.INTERVAL_DAILY, cal.getTimeInMillis(), System.currentTimeMillis());
+        UsageStatsManager usageManager = (UsageStatsManager) appContext.getSystemService(Context.USAGE_STATS_SERVICE);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.WEEK_OF_MONTH, -1);
+
+        List<UsageStats> allAppUsageStats = usageManager.queryUsageStats(usageManager.INTERVAL_WEEKLY, cal.getTimeInMillis(), System.currentTimeMillis());
 //            allAppUsageStats = this.sortAppUsageStatsByLaunchCount(allAppUsageStats);
 //            List<UsageStats> topAppUsageStats = allAppUsageStats.subList(0, 3);
 
-            PackageManager packageManager = appContext.getPackageManager();
-            for (int i = 0; i < allAppUsageStats.size(); i++) {
-                try {
-                    UsageStats appUsageStats = allAppUsageStats.get(i);
-                    Class c = appUsageStats.getClass();
-                    ApplicationInfo appInfo = packageManager.getApplicationInfo(appUsageStats.getPackageName(), 0);
+        PackageManager packageManager = appContext.getPackageManager();
+        List<String> packageNameList = new ArrayList();
+        for (int i = 0; i < allAppUsageStats.size(); i++) {
+            try {
+                UsageStats appUsageStats = allAppUsageStats.get(i);
+                Class c = appUsageStats.getClass();
+                ApplicationInfo appInfo = packageManager.getApplicationInfo(appUsageStats.getPackageName(), 0);
+                // TODO: usagestatus 返回的内容有重复
+//                if (packageNameList.contains(appInfo.packageName)) {
+//                    continue;
+//                } else {
+//                    packageNameList.add(appInfo.packageName);
+//                }
 
-                    if (packageManager.getLaunchIntentForPackage(appInfo.packageName) != null) {
-                        AppInfo newInfo = new AppInfo();
-                        newInfo.appName = appInfo.loadLabel(packageManager).toString();
-                        newInfo.packageName = appInfo.packageName;
+                if (packageManager.getLaunchIntentForPackage(appInfo.packageName) != null) {
+                    AppInfo newInfo = new AppInfo();
+                    newInfo.appName = appInfo.loadLabel(packageManager).toString();
+                    newInfo.packageName = appInfo.packageName;
 
-                        // launchcount 是 @hide API，需要通过反射获取
-                        Field field = c.getDeclaredField("mLaunchCount");
-                        field.setAccessible(true);
-                        newInfo.launchCount = field.getInt(appUsageStats);
+                    // @hide API，需要通过反射获取
+                    Field launchCountField = c.getDeclaredField("mLaunchCount");
+                    launchCountField.setAccessible(true);
 
-                        apps.add(newInfo);
-                    }
-                } catch (Exception e) {
-                    WXLogUtils.e(e.getMessage());
+                    Field totalTimeInForegroundField = c.getDeclaredField("mTotalTimeInForeground");
+                    totalTimeInForegroundField.setAccessible(true);
+
+                    newInfo.launchCount = launchCountField.getInt(appUsageStats);
+                    newInfo.usageTime = totalTimeInForegroundField.getLong(appUsageStats);
+                    newInfo.activeScore = newInfo.launchCount * newInfo.usageTime;
+
+                    apps.add(newInfo);
                 }
+            } catch (Exception e) {
+                WXLogUtils.e(e.getMessage());
             }
-
-        } else {
-            Intent permissionIntent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-            startActivity(mWXSDKInstance.getContext(), permissionIntent, null);
         }
 
         return apps;
