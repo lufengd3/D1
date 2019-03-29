@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements IWXRenderListener
     BroadcastReceiver wxReceiver;
 
     String bundleUrl = "http://lfzy.space/js/index.bundle.min.js";
-//    private String bundleUrl = "http://30.10.84.85:9999/js/index.bundle.js";
+//    String bundleUrl = "http://30.10.92.193:9999/js/index.bundle.js";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

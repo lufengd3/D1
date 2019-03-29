@@ -21,6 +21,7 @@ import me.lufeng.component.AppIcon;
 import me.lufeng.module.PageLocation;
 import me.lufeng.module.PermissionManager;
 import me.lufeng.module.PkgManager;
+import me.lufeng.module.SystemStatus;
 import me.lufeng.module.WXVirbator;
 import me.lufeng.module.WallPaper;
 
@@ -59,6 +60,7 @@ public class WXApplication extends Application {
             WXSDKEngine.registerModule("location", PageLocation.class);
             WXSDKEngine.registerModule("vibrator", WXVirbator.class);
             WXSDKEngine.registerModule("PermissionManager", PermissionManager.class);
+            WXSDKEngine.registerModule("SystemStatus", SystemStatus.class);
         } catch (WXException e) {
             WXLogUtils.e("[WXSDKEngine] register:", e);
         }
