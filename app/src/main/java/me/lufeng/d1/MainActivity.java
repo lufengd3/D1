@@ -12,13 +12,16 @@ import android.widget.Toast;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
+import com.taobao.weex.utils.WXFileUtils;
+import com.taobao.weex.utils.WXLogUtils;
 
 public class MainActivity extends AppCompatActivity implements IWXRenderListener {
     WXSDKInstance mWXSDKInstance;
     BroadcastReceiver wxReceiver;
 
-    String bundleUrl = "http://lfzy.space/js/index.bundle.min.js";
-//    String bundleUrl = "http://30.10.92.193:9999/js/index.bundle.js";
+//    String bundleUrl = "http://lfzy.space/js/index.bundle.min.js";
+//    String bundleUrl = "http://192.168.199.201:9999/js/index.bundle.js";
+    String bundleUrl = "file://assets/index.js";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +34,8 @@ public class MainActivity extends AppCompatActivity implements IWXRenderListener
     private void render() {
         mWXSDKInstance = new WXSDKInstance(this);
         mWXSDKInstance.registerRenderListener(this);
-        mWXSDKInstance.renderByUrl(this.bundleUrl, this.bundleUrl, null, null,WXRenderStrategy.APPEND_ASYNC);
+        mWXSDKInstance.renderByUrl(bundleUrl, bundleUrl, null, null, WXRenderStrategy.APPEND_ASYNC);
+//        mWXSDKInstance.render(bundleUrl, WXFileUtils.loadFileOrAsset("index.js", this), null, null, WXRenderStrategy.APPEND_ASYNC);
 
         this.listenBroadcast();
     }
@@ -71,9 +75,32 @@ public class MainActivity extends AppCompatActivity implements IWXRenderListener
         this.reload();
     }
     @Override
-    public void onException(WXSDKInstance instance, String errCode, String msg) {
-        Log.v("WXSample", "on exception");
-        Log.v("WXSample", msg);
+    public void onException(WXSDKInstance wxInstance, String errCode, String msg) {
+        //super.onException(wxInstance, errCode, msg);
+        WXLogUtils.e(errCode + " " + msg);
+
+        if (msg.contains("wx_create_instance_error")) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            MainActivity.this.render();
+                        }
+                    });
+                }
+            }).start();
+        } else {
+            String reportMsg = "[" + errCode + "]" + msg;
+            Toast.makeText(mWXSDKInstance.getContext(), reportMsg, Toast.LENGTH_LONG).show();
+        }
+
     }
     @Override
     protected void onResume() {
