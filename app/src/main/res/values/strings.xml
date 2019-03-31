@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">D1</string>
+    <string name="app_setting_name">D1 Setting</string>
 </resources>

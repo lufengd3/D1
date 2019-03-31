@@ -16,6 +16,8 @@ public class WxReceiver extends BroadcastReceiver {
     String launcherChangeEventName = "launcher.changed";
     String batteryChangeEventName = "battery.changed";
 
+    public WxReceiver() {}
+
     public WxReceiver(WXSDKInstance wxInstance) {
         mWXSDKInstance = wxInstance;
     }
