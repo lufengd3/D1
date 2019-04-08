@@ -146,6 +146,7 @@ public class PkgManager extends WXModule {
                     newInfo.launchCount = launchCountField.getInt(appUsageStats);
                     newInfo.usageTime = totalTimeInForegroundField.getLong(appUsageStats);
                     newInfo.activeScore = newInfo.launchCount * newInfo.usageTime;
+                    newInfo.lastTimeUsed = appUsageStats.getLastTimeUsed();
 
                     apps.add(newInfo);
                 }

@@ -6,4 +6,5 @@ public class AppInfo {
     int launchCount = 0;
     long usageTime = 0;
     long activeScore = 0;
+    long lastTimeUsed = 0;
 }
