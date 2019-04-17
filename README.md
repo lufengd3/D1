@@ -1,5 +1,12 @@
 # API
 
+## Component
+
+### appicon
+```js
+<appicon name={'com.android.phone'} style={width: 90; height: 90} />
+```
+
 ## Module
 
 ### packageManager
@@ -67,11 +74,4 @@ const {
   availableStorage,
   totalStorage
 } = status;
-```
-
-## Component
-
-### appicon
-```js
-<appicon name={'com.android.phone'} style={width: 90; height: 90} />
 ```
