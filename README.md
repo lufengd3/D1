@@ -75,3 +75,13 @@ const {
   totalStorage
 } = status;
 ```
+
+## GlobalEvent
+### launcher.changed
+```js
+const globalEvent = require('@weex-module/globalEvent');
+
+globalEvent.addEventListener('launcher.changed', () => {
+  this.updateAppList();
+});
+```
